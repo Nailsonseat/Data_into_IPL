@@ -1,10 +1,8 @@
 # write your import here
 import pandas as pd
 import numpy as np
-from imblearn.combine import SMOTETomek
-from sklearn.utils.class_weight import compute_class_weight
 from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import StandardScaler
+from imblearn.combine import SMOTETomek
 
 
 class MyModel:
@@ -14,8 +12,8 @@ class MyModel:
     def get_mlpc_model(self):
         # Decision tree classifier
         mlp_clf = MLPClassifier(hidden_layer_sizes=(100,),
-                             max_iter=100,
-                               random_state=42)
+                                max_iter=100,
+                                random_state=42)
         return mlp_clf
 
     def preprocessing(self, training_data):
@@ -60,11 +58,11 @@ class MyModel:
         X_resampled, y_resampled = sampler.fit_resample(X_le, y)
 
         # Setting weights for each class
-        weights_raw = compute_class_weight(
-            'balanced', classes=np.unique(y), y=y)
-        keys = list(np.unique(y))
-        class_weight = dict(zip(keys, weights_raw))
-        self.model.set_params(class_weight=class_weight)
+        # weights_raw = compute_class_weight(
+        #     'balanced', classes=np.unique(y), y=y)
+        # keys = list(np.unique(y))
+        # class_weight = dict(zip(keys, weights_raw))
+        # self.model.set_params(class_weight=class_weight)
 
         return X_resampled, y_resampled
 
@@ -177,7 +175,7 @@ class MyModel:
 # Comment this when submitting
 test = MyModel()
 
-input = pd.read_csv(r'training_dataset\DataSet\test_file.csv')
+input = pd.read_csv('training_dataset/DataSet/test_file.csv')
 
 ball_data = pd.read_csv(
     'training_dataset/DataSet/IPL_Ball_by_Ball_2008_2022.csv')
