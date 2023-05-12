@@ -1,31 +1,20 @@
 # write your import here
 import pandas as pd
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import BaggingClassifier
+from sklearn.neural_network import MLPClassifier
 from imblearn.combine import SMOTETomek
-from sklearn.utils.class_weight import compute_class_weight
 
 
 class MyModel:
     def __init__(self) -> None:
-        self.model = self.get_dtc_model()
+        self.model = self.get_mlpc_model()
 
-    def get_dtc_model(self):
+    def get_mlpc_model(self):
         # Decision tree classifier
-        dtc_clf = DecisionTreeClassifier(
-            min_samples_split=2,
-            min_samples_leaf=1,
-            max_depth=33,
-            criterion='gini',
-            random_state=0
-        )
-        bagging_clf = BaggingClassifier(
-            estimator=dtc_clf,
-            n_estimators=10,
-            random_state=0,
-        )
-        return dtc_clf
+        mlp_clf = MLPClassifier(hidden_layer_sizes=(100,),
+                                max_iter=100,
+                                random_state=42)
+        return mlp_clf
 
     def preprocessing(self, training_data):
 
@@ -69,11 +58,11 @@ class MyModel:
         X_resampled, y_resampled = sampler.fit_resample(X_le, y)
 
         # Setting weights for each class
-        weights_raw = compute_class_weight(
-            'balanced', classes=np.unique(y), y=y)
-        keys = list(np.unique(y))
-        class_weight = dict(zip(keys, weights_raw))
-        self.model.set_params(class_weight=class_weight)
+        # weights_raw = compute_class_weight(
+        #     'balanced', classes=np.unique(y), y=y)
+        # keys = list(np.unique(y))
+        # class_weight = dict(zip(keys, weights_raw))
+        # self.model.set_params(class_weight=class_weight)
 
         return X_resampled, y_resampled
 
@@ -184,7 +173,7 @@ class MyModel:
 
 
 # Comment this when submitting
-""" test = MyModel()
+test = MyModel()
 
 input = pd.read_csv('training_dataset/DataSet/test_file.csv')
 
@@ -195,4 +184,4 @@ match_data = pd.read_csv(
     'training_dataset/DataSet/IPL_Matches_Result_2008_2022.csv')
 
 test.fit([ball_data, match_data])
-print(test.predict(input)) """
+print(test.predict(input))
